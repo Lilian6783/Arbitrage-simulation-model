@@ -1,0 +1,46 @@
+import time
+
+from panel.pane import equation
+
+def arb_a_m(client):
+  #Securities info queries
+  param_A = {'ticker': 'CRZY_A'}
+  resp = client.get('/securities', params=param_A).json()
+  Bid_A = resp[0].get('bid')
+
+  param_M = {'ticker': 'CRZY_M'}
+  resp = client.get('/securities', params=param_M).json()
+  Bid_M = resp[0].get('bid')
+
+  param_A = {'ticker': 'CRZY_A'}
+  resp = client.get('/securities', params=param_A).json()
+  Ask_A = resp[0].get('ask')
+
+  param_M = {'ticker': 'CRZY_M'}
+  resp = client.get('/securities', params=param_M).json()
+  Ask_M = resp[0].get('ask')
+
+#Minimum delta selection to enter a trade
+min_delta = 0.05
+
+#Verify arbitrage equation then enter a trade
+if Ask_A + min_delta < Bid_M:
+  params_buy = {'ticker': 'CRZY_A', 'type': 'MARKET', 'quantity': 3000, 'action': 'BUY'}
+  params_sell = {'ticker': 'CRZY_M', 'type': 'MARKET', 'quantity': 3000, 'action': 'SELL'}
+  client.post('/orders', params=params_buy)
+  client.post('/orders', params=params_sell)
+  time.sleep(0.2)
+
+elif Ask_M + min_delta < Bid_A:
+  params_buy = {'ticker': 'CRZY_M', 'type': 'MARKET', 'quantity': 3000, 'action': 'BUY'}
+  params_sell = {'ticker': 'CRZY_A', 'type': 'MARKET', 'quantity': 3000, 'action': 'SELL'}
+  client.post('/orders', params=params_buy)
+  client.post('/orders', params=params_sell)
+  time.sleep(0.2)
+
+else:
+  pass
+
+
+
+

@@ -1,0 +1,18 @@
+import httpx
+import time
+
+def main():
+  while True:
+    current_tick = client.get("/case").json().get("tick")
+    if 1 < current_tick < 300:
+      arb_a_m(client)
+      time.sleep(0.05)
+
+if __name__ == "__main__":
+API_KEY = "API KEY"
+API_Port = "API PORT"
+url = f"http://localhost:{API_PORT}/v1"
+params = {'key': API_KEY}
+
+with httpx.Client(base_url=url, params=params) as client:
+  main()

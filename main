@@ -1,6 +1,8 @@
 import httpx
 import time
 
+from algo_arb import *
+
 def main():
   while True:
     current_tick = client.get("/case").json().get("tick")
